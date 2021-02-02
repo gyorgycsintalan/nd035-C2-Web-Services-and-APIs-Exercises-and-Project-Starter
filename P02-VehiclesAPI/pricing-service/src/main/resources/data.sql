@@ -1,0 +1,1 @@
+insert into price (currency, price, vehicle_id) values ('EUR', 6000, 1);
