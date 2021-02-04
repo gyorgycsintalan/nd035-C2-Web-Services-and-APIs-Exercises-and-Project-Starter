@@ -101,6 +101,10 @@ public class CarControllerTest {
          *   the whole list of vehicles. This should utilize the car from `getCar()`
          *   below (the vehicle will be the first in the list).
          */
+        mvc.perform(get("/cars"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$._embedded.carList[0].id", is(2)));
 
     }
 
@@ -116,7 +120,21 @@ public class CarControllerTest {
          */
 
         mvc.perform(get("/cars/2"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.location.lat", is(40.730610)))
+                .andExpect(jsonPath("$.location.lon", is(-73.935242)))
+                .andExpect(jsonPath("$.details.model", is("Impala")))
+                .andExpect(jsonPath("$.details.mileage", is(32280)))
+                .andExpect(jsonPath("$.details.externalColor", is("white")))
+                .andExpect(jsonPath("$.details.body", is("sedan")))
+                .andExpect(jsonPath("$.details.engine", is("3.6L V6")))
+                .andExpect(jsonPath("$.details.fuelType", is("Gasoline")))
+                .andExpect(jsonPath("$.details.modelYear", is(2018)))
+                .andExpect(jsonPath("$.details.productionYear", is(2018)))
+                .andExpect(jsonPath("$.details.numberOfDoors", is(4)))
+                .andExpect(jsonPath("$.details.manufacturer.name", is("Chevrolet")))
+                .andExpect(jsonPath("$.condition", is("USED")));
 
         verify(carService, times(1)).findById(2L);
 
@@ -133,6 +151,9 @@ public class CarControllerTest {
          *   when the `delete` method is called from the Car Controller. This
          *   should utilize the car from `getCar()` below.
          */
+        mvc.perform(delete("/cars/2"))
+                .andExpect(status().isNoContent());
+        verify(carService, times(1)).delete(2L);
     }
 
     /**
