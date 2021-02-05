@@ -106,6 +106,7 @@ public class CarControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$._embedded.carList[0].id", is(2)));
 
+        verify(carService, times(1)).list();
     }
 
     /**
