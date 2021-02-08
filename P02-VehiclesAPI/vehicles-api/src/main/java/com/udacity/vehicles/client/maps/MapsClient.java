@@ -31,12 +31,13 @@ public class MapsClient {
      * @return An updated location including street, city, state and zip,
      *   or an exception message noting the Maps service is down
      */
-    public Location getAddress(Location location) {
+    public Location getAddress(Long vehicleId, Location location) {
         try {
             Address address = client
                     .get()
                     .uri(uriBuilder -> uriBuilder
                             .path("/maps/")
+                            .queryParam("vehicleId", vehicleId)   //added parameter
                             .queryParam("lat", location.getLat())
                             .queryParam("lon", location.getLon())
                             .build()
@@ -50,5 +51,23 @@ public class MapsClient {
             log.warn("Map service is down");
             return location;
         }
+    }
+
+    public Void deleteVehicleAddress(Long vehicleId) {
+        try {
+            System.out.println("maps client: " + vehicleId);
+            return client
+                    .delete()
+                    .uri(uriBuilder -> uriBuilder
+                        .path("/maps/" + vehicleId)
+                        .build()
+                    )
+                    .retrieve()
+                    .bodyToMono(Void.class)
+                    .block();
+        } catch (Exception e) {
+            log.warn("Map service is down");
+        }
+        return null;
     }
 }

@@ -73,7 +73,7 @@ public class CarService {
          * meaning the Maps service needs to be called each time for the address.
          */
 
-        car.setLocation(mapsClient.getAddress(car.getLocation()));
+        car.setLocation(mapsClient.getAddress(car.getId(), car.getLocation()));
 
         return car;
     }
@@ -113,6 +113,7 @@ public class CarService {
          * TODO: Delete the car from the repository.
          */
 
+        mapsClient.deleteVehicleAddress(id); //record from maps application also
         repository.delete(car);
         
     }

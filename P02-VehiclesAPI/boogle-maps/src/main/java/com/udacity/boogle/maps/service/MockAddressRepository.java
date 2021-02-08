@@ -1,4 +1,6 @@
-package com.udacity.boogle.maps;
+package com.udacity.boogle.maps.service;
+
+import com.udacity.boogle.maps.model.Address;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -8,7 +10,7 @@ import java.util.stream.Collectors;
 /**
  * Implements a mock repository for generating a random address.
  */
-class MockAddressRepository {
+public class MockAddressRepository {
 
     /**
      * Gets a random address from the list.
@@ -36,6 +38,40 @@ class MockAddressRepository {
         String city = String.join(" ", list);
 
         return new Address(streetAndNumber, city, state, zip);
+    }
+
+
+    /**
+     * Gets a random address from the list.
+     * Sets fields of the input object.
+     */
+    static void setRandomValues(Address addressObj) {
+
+        Random generator = new Random();
+        int randomIndex = generator.nextInt(ADDRESSES.length);
+
+        String address = ADDRESSES[randomIndex];
+
+        String[] addressParts = address.split(",");
+        String streetAndNumber = addressParts[0];
+        String cityStateAndZip = addressParts[1];
+
+        String[] cityStateAndZipParts = cityStateAndZip.trim().split(" ");
+
+        LinkedList<String> list =
+                Arrays.stream(cityStateAndZipParts).map(String::trim)
+                        .collect(Collectors.toCollection(LinkedList::new));
+
+        String zip = list.pollLast();
+        String state = list.pollLast();
+        String city = String.join(" ", list);
+
+
+        //assign generated values to corresponding fields of the input Address object
+        addressObj.setAddress(streetAndNumber);
+        addressObj.setCity(city);
+        addressObj.setState(state);
+        addressObj.setZip(zip);
     }
 
     /**
