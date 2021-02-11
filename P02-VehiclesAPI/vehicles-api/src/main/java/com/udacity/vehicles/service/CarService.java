@@ -36,7 +36,15 @@ public class CarService {
      * @return a list of all vehicles in the CarRepository
      */
     public List<Car> list() {
-        return repository.findAll();
+        List<Car> cars = repository.findAll();
+
+        cars.forEach(car -> {
+            car.setLocation(mapsClient.getAddress(car.getId(), car.getLocation()));
+            car.setPrice(priceClient.getPrice(car.getId()));
+        });
+
+        return cars;
+        //return repository.findAll();
     }
 
     /**
@@ -113,6 +121,7 @@ public class CarService {
          * TODO: Delete the car from the repository.
          */
 
+        priceClient.updatePrice(id); //generate new price for this id for further use
         mapsClient.deleteVehicleAddress(id); //record from maps application also
         repository.delete(car);
         

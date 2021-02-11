@@ -1,10 +1,13 @@
 package com.udacity.pricing.service;
 
 import com.udacity.pricing.domain.price.Price;
+import com.udacity.pricing.domain.price.PriceRepository;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
@@ -12,7 +15,14 @@ import java.util.stream.LongStream;
 /**
  * Implements the pricing service to get prices for each vehicle.
  */
+@Service
 public class PricingService {
+
+    private PriceRepository priceRepository;
+
+    public PricingService(PriceRepository priceRepository) {
+        this.priceRepository = priceRepository;
+    }
 
     /**
      * Holds {ID: Price} pairings (current implementation allows for 20 vehicles)
@@ -46,6 +56,14 @@ public class PricingService {
                 .multiply(new BigDecimal(5000d)).setScale(2, RoundingMode.HALF_UP);
     }
 
+    public void updatePrice(Long vehicleId) throws PriceException {
+        Optional<Price> optionalPrice = priceRepository.findById(vehicleId);
 
+        if (optionalPrice.isPresent()) {
+            Price price = optionalPrice.orElseThrow(()->new PriceException("Price not found!"));
+            price.setPrice(randomPrice());
+            priceRepository.save(price);
+        }
+    }
 
 }

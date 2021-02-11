@@ -1,49 +1,30 @@
-package com.udacity.vehicles.domain.car;
+package com.udacity.orders.model.car;
 
-import com.udacity.vehicles.domain.Condition;
-import com.udacity.vehicles.domain.Location;
-import java.time.LocalDateTime;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.Transient;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import java.time.LocalDateTime;
 
-/**
- * Declares the Car class, related variables and methods.
- */
-@Entity
-@EntityListeners(AuditingEntityListener.class)
+@Embeddable
 public class Car {
-
-    @Id
-    @GeneratedValue
+    @Column(name = "vehicle_id")
     private Long id;
 
-    @CreatedDate
+    @Transient
     private LocalDateTime createdAt;
 
-    @LastModifiedDate
+    @Transient
     private LocalDateTime modifiedAt;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
+    @Transient
     private Condition condition;
 
-    @Valid
-    @Embedded
+    @Transient
     private Details details;
 
-    @Valid
-    @Embedded
+    @Transient
     private Location location;
 
     @Transient

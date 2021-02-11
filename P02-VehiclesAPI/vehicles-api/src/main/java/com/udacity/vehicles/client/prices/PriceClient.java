@@ -49,4 +49,20 @@ public class PriceClient {
         }
         return "(consult price)";
     }
+
+    public void updatePrice(Long vehicleId) {
+        try {
+            client
+                .patch()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/services/price/" + vehicleId)
+                        .build()
+                )
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+        } catch (Exception e) {
+            log.error("Unexpected error retrieving price for vehicle {}", vehicleId, e);
+        }
+    }
 }
